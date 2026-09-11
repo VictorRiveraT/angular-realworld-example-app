@@ -458,3 +458,23 @@ a:hover {
   border-color: var(--primary) !important;
   color: var(--primary) !important;
 }
+
+/* =========================================
+   PROFILE PAGE (GLASSMORPHISM)
+   ========================================= */
+.profile-page .user-info {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 2rem 0 1rem;
+}
+
+.profile-page .user-info h4 {
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.profile-page .user-info p {
+  color: var(--text-muted) !important;
+}
