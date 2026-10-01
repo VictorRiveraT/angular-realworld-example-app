@@ -6,9 +6,10 @@ import { USE_PYTHON_API } from "./api-context.token";
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const jwtService = inject(JwtService);
 
-  // FIX: We ALWAYS use the main token (the one given by PHP).
-  // By sharing the JWT_SECRET, this token works for both backends.
-  const token = jwtService.getToken();
+  // Cada API recibe el token que ella misma emitió durante el login.
+  const token = req.context.get(USE_PYTHON_API)
+    ? window.localStorage.getItem("python_token")
+    : jwtService.getToken();
 
   let scheme: string = "Token"; // Default for PHP (RealWorld spec)
 
