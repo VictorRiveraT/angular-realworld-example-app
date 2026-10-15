@@ -1,0 +1,39 @@
+.image-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.image-result {
+  margin: 0;
+}
+
+.image-result-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.image-result .img-thumbnail {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.image-result-button:hover .img-thumbnail,
+.image-result-button:focus-visible .img-thumbnail {
+  transform: scale(1.03);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
+}
+
+.image-result figcaption {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+}

@@ -3,6 +3,17 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ArticleListConfig } from "../models/article-list-config.model";
+
+export interface UnsplashImage {
+  id: string;
+  url_small: string;
+  url_regular: string;
+  alt: string;
+  user_name: string;
+  user_url: string;
+  photo_url: string;
+  download_location: string | null;
+}
 import { Article } from "../models/article.model";
 
 @Injectable({ providedIn: "root" })
@@ -59,30 +70,18 @@ export class ArticlesService {
     return this.http.delete<void>(`/articles/${slug}/favorite`);
   }
 
-  searchImages(
-    query: string,
-  ): Observable<{
-    images: {
-      id: string;
-      url_small: string;
-      url_regular: string;
-      alt: string;
-      user_name: string;
-    }[];
-  }> {
+  searchImages(query: string): Observable<{ images: UnsplashImage[] }> {
     // Usamos HttpParams para añadir ?q=...
     const params = new HttpParams().set("q", query);
 
     // Usamos la URL relativa /images/search
     // El interceptor de la app debería añadir el prefijo /api
-    return this.http.get<{
-      images: {
-        id: string;
-        url_small: string;
-        url_regular: string;
-        alt: string;
-        user_name: string;
-      }[];
-    }>("/images/search", { params });
+    return this.http.get<{ images: UnsplashImage[] }>("/images/search", {
+      params,
+    });
+  }
+
+  trackImageSelection(imageId: string): Observable<void> {
+    return this.http.post<void>(`/images/${imageId}/download`, {});
   }
 }

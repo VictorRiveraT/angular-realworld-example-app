@@ -5,6 +5,7 @@ export interface Article {
   title: string;
   description: string;
   body: string;
+  image: string | null;
   tagList: string[];
   createdAt: string;
   updatedAt: string;

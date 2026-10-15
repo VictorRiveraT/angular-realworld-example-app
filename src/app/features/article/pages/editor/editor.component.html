@@ -5,8 +5,6 @@
         <app-list-errors [errors]="errors" />
 
         <form [formGroup]="articleForm">
-          <pre>Valor del Formulario: {{ articleForm.value | json }}</pre>
-
           <fieldset [disabled]="isSubmitting">
             <fieldset class="form-group">
               <input
@@ -77,12 +75,14 @@
                   type="text"
                   class="form-control"
                   placeholder="Ej: tecnología, PHP, Angular..."
-                  (keyup.enter)="searchForImage(searchBox.value)"
+                  (keydown.enter)="
+                    $event.preventDefault(); searchForImage(searchBox.value)
+                  "
                 />
                 <button
                   class="btn btn-outline-primary"
                   type="button"
-                  [disabled]="isSearchingImages"
+                  [disabled]="isSearchingImages || !searchBox.value.trim()"
                   (click)="searchForImage(searchBox.value)"
                 >
                   <i class="ion-search"></i> Buscar
@@ -106,20 +106,38 @@
               @if (imageSearchResults.length > 0) {
                 <div class="image-results-grid mt-3">
                   @for (img of imageSearchResults; track img.id) {
-                    <img
-                      [src]="img.url_small"
-                      [alt]="img.alt"
-                      class="img-thumbnail"
-                      (click)="selectImage(img.url_regular)"
-                      style="
-                        cursor: pointer;
-                        width: 100px;
-                        height: 100px;
-                        object-fit: cover;
-                        margin: 4px;
-                      "
-                      [title]="'Foto por ' + img.user_name"
-                    />
+                    <figure class="image-result">
+                      <button
+                        type="button"
+                        class="image-result-button"
+                        (click)="selectImage(img)"
+                        [attr.aria-label]="
+                          'Seleccionar foto de ' + img.user_name
+                        "
+                      >
+                        <img
+                          [src]="img.url_small"
+                          [alt]="img.alt"
+                          class="img-thumbnail"
+                        />
+                      </button>
+                      <figcaption>
+                        Foto por
+                        <a
+                          [href]="img.user_url"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >{{ img.user_name }}</a
+                        >
+                        en
+                        <a
+                          [href]="img.photo_url"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >Unsplash</a
+                        >
+                      </figcaption>
+                    </figure>
                   }
                 </div>
               }

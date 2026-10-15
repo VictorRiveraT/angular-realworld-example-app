@@ -335,6 +335,34 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(92, 255, 159, 0.2) !important;
 }
 
+/* Keep placeholder text readable over the dark form background. */
+.form-control::placeholder {
+  color: #ffffff60 !important;
+  opacity: 1 !important;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #ffffff60 !important;
+  opacity: 1 !important;
+}
+
+.form-control::-moz-placeholder {
+  color: #ffffff60 !important;
+  opacity: 1 !important;
+}
+
+.article-page .banner {
+  background: var(--bg-darker) !important;
+  border-color: var(--border-light) !important;
+  color: var(--text-main) !important;
+}
+
+.article-page .banner h1,
+.article-page .banner .article-meta .author {
+  color: #fff !important;
+  text-shadow: none !important;
+}
+
 /* =========================================
    TABS (NAV-PILLS)
    ========================================= */

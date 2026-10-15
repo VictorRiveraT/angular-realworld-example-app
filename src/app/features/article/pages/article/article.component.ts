@@ -30,6 +30,7 @@ import { FollowButtonComponent } from "../../../profile/components/follow-button
 @Component({
   selector: "app-article-page",
   templateUrl: "./article.component.html",
+  styleUrl: "./article.component.css",
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [
     ArticleMetaComponent,

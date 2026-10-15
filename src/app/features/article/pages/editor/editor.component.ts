@@ -16,7 +16,10 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { combineLatest } from "rxjs";
 import { Errors } from "../../../../core/models/errors.model";
-import { ArticlesService } from "../../services/articles.service";
+import {
+  ArticlesService,
+  UnsplashImage,
+} from "../../services/articles.service";
 import { UserService } from "../../../../core/auth/services/user.service";
 import { ListErrorsComponent } from "../../../../shared/components/list-errors.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -39,6 +42,7 @@ interface ArticleForm {
 @Component({
   selector: "app-editor-page",
   templateUrl: "./editor.component.html",
+  styleUrl: "./editor.component.css",
   // Añade  a los imports
   imports: [
     CommonModule, // <-- 2. AÑADE CommonModule AQUÍ
@@ -76,13 +80,7 @@ export default class EditorComponent implements OnInit {
   errors: Errors | null = null;
   isSubmitting = false;
   destroyRef = inject(DestroyRef);
-  imageSearchResults: {
-    id: string;
-    url_small: string;
-    url_regular: string;
-    alt: string;
-    user_name: string;
-  }[] = [];
+  imageSearchResults: UnsplashImage[] = [];
   isSearchingImages = false;
   imageSearchError: string | null = null;
 
@@ -118,6 +116,7 @@ export default class EditorComponent implements OnInit {
 
             const articleForForm = {
               ...article,
+              image: article.image ?? "",
               publishDate: publishDateForForm,
             };
 
@@ -180,8 +179,11 @@ export default class EditorComponent implements OnInit {
    * Llama al servicio para buscar imágenes
    */
   searchForImage(query: string): void {
-    if (!query) {
+    const normalizedQuery = query.trim();
+
+    if (!normalizedQuery) {
       this.imageSearchResults = [];
+      this.imageSearchError = null;
       return;
     }
 
@@ -189,11 +191,13 @@ export default class EditorComponent implements OnInit {
     this.imageSearchError = null;
 
     this.articleService
-      .searchImages(query)
+      .searchImages(normalizedQuery)
       .pipe(takeUntilDestroyed(this.destroyRef)) // Usamos el patrón que ya tienes
       .subscribe({
         next: (data) => {
           this.imageSearchResults = data.images;
+          this.imageSearchError =
+            data.images.length === 0 ? "No se encontraron imágenes." : null;
           this.isSearchingImages = false;
         },
         error: (err) => {
@@ -209,8 +213,17 @@ export default class EditorComponent implements OnInit {
   /**
    * Pone la URL de la imagen seleccionada en el formulario
    */
-  selectImage(imageUrl: string): void {
-    this.articleForm.patchValue({ image: imageUrl });
-    this.imageSearchResults = []; // Limpiar resultados
+  selectImage(image: UnsplashImage): void {
+    this.articleForm.patchValue({ image: image.url_regular });
+    this.imageSearchResults = [];
+
+    // Unsplash asks API applications to report when a photo is selected for use.
+    this.articleService
+      .trackImageSelection(image.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: (error) =>
+          console.warn("No se pudo registrar la selección en Unsplash", error),
+      });
   }
 }
