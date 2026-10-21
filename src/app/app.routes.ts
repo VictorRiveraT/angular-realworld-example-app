@@ -11,6 +11,7 @@ export const APP_ROUTES = {
   PROFILE: "profile",
   EDITOR: "editor",
   ARTICLE: "article/:slug",
+  ARCHITECTURE_DEMO: "architecture-demo",
 };
 
 const isNotAuthenticated = () =>
@@ -62,5 +63,13 @@ export const routes: Routes = [
     path: APP_ROUTES.ARTICLE,
     loadComponent: () =>
       import("./features/article/pages/article/article.component"),
+  },
+  {
+    path: APP_ROUTES.ARCHITECTURE_DEMO,
+    loadComponent: () =>
+      import(
+        "./features/article/pages/architecture-demo/architecture-demo.component"
+      ),
+    canActivate: [isAuthenticated],
   },
 ];

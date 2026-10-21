@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpContext, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ArticleListConfig } from "../models/article-list-config.model";
+import { USE_PYTHON_API } from "../../../core/interceptors/api-context.token";
 
 export interface UnsplashImage {
   id: string;
@@ -13,6 +14,13 @@ export interface UnsplashImage {
   user_url: string;
   photo_url: string;
   download_location: string | null;
+}
+
+export interface PythonArticle {
+  slug: string;
+  title: string;
+  description: string | null;
+  body: string | null;
 }
 import { Article } from "../models/article.model";
 
@@ -83,5 +91,20 @@ export class ArticlesService {
 
   trackImageSelection(imageId: string): Observable<void> {
     return this.http.post<void>(`/images/${imageId}/download`, {});
+  }
+
+  getPythonArticlesDirect(): Observable<PythonArticle[]> {
+    const context = new HttpContext().set(USE_PYTHON_API, true);
+    return this.http.get<PythonArticle[]>("/articles", { context });
+  }
+
+  getPythonArticlesThroughPhp(): Observable<{
+    articles: PythonArticle[];
+    path: string;
+  }> {
+    return this.http.get<{
+      articles: PythonArticle[];
+      path: string;
+    }>("/python/articles");
   }
 }
