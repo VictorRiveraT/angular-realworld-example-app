@@ -10,11 +10,11 @@ export const environment = {
   // ¿Estoy en Vercel? -> Usa Render PHP
   phpApiUrl: isLocal 
     ? 'http://localhost:8000/api' 
-    : 'https://upch-slim-php-realworld.onrender.com/api',
+    : 'https://slim-php-realworld-example-app.onrender.com/api',
 
-  // ¿Estoy en local? -> Usa localhost:8080
+  // ¿Estoy en local? -> Usa localhost:8085
   // ¿Estoy en Vercel? -> Usa Render Python
   pythonApiUrl: isLocal 
-    ? 'http://localhost:8080/api' 
-    : 'https://upch-2do-backend-python-realworld.onrender.com/api'
+    ? 'http://localhost:8085/api' 
+    : 'https://twodo-backend-python.onrender.com/api'
 };
